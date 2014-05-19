@@ -8,6 +8,8 @@ GEM
     akami (1.2.2)
       gyoku (>= 0.4.0)
       nokogiri
+    bats (0.1.2)
+      rack
     berkshelf (2.0.16)
       activesupport (~> 3.2.0)
       addressable (~> 2.3.4)
@@ -185,8 +187,14 @@ GEM
       nokogiri (>= 1.4.0)
       nori (~> 1.0)
       wasabi (~> 1.0)
+    serverspec (1.6.0)
+      highline
+      net-ssh
+      rspec (~> 2.13)
+      specinfra (~> 1.11)
     slop (3.5.0)
     solve (0.8.2)
+    specinfra (1.12.0)
     systemu (2.5.2)
     test-kitchen (1.2.1)
       mixlib-shellout (~> 1.2)
@@ -219,10 +227,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bats
   berkshelf (~> 2.0)
   chefspec (~> 3.0)
   foodcritic (~> 3.0)
   kitchen-docker
   kitchen-vagrant
   rake
+  serverspec
   test-kitchen (~> 1.1)
