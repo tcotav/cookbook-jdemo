@@ -15,26 +15,31 @@ if (/darwin/ =~ RUBY_PLATFORM) != nil
 end
 
 if is_osx
-  pref_interface = ['en3: Thunderbolt 1', 'en4: Thunderbolt 2', 'en0: Wi-Fi (AirPort)']
-  vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name ).gsub(/Name:\s+/, '').split("\n")
-  pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
-  $network_interface = pref_interface[0]
+   pref_interface = ['en3: Thunderbolt 1', 'en4: Thunderbolt 2', 'en0: Wi-Fi (AirPort)']
+   vm_interfaces = %x( VBoxManage list bridgedifs | grep ^Name ).gsub(/Name:\s+/, '').split("\n")
+   pref_interface = pref_interface.map {|n| n if vm_interfaces.include?(n)}.compact
+   $network_interface = pref_interface[0]
 end
 
-orgName='YOURORG'
+orgName='gnslngr'
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
-  # Every Vagrant virtual environment requires a box to build off of.
-  config.vm.box = "opscode-ubuntu-13.04"
+  #config.vm.box = "opscode-ubuntu-13.04"
+  #config.vm.box_url = "http://files.vagrantup.com/opscode-ubuntu-13.04.box"
 
-  # The url from where the 'config.vm.box' box will be fetched if it
-  # doesn't already exist on the user's system.
-  config.vm.box_url = "http://files.vagrantup.com/opscode-ubuntu-13.04.box"
+  config.vm.box = 'ubuntu-12.04'
+  config.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{config.vm.box}_chef-provisionerless.box"
 
-  # set the size of your created VM here by uncommenting and setting param
+  config.vm.boot_timeout = 300
+  #config.berkshelf.enabled = true
+
   config.vm.provider :virtualbox do |vb|
     vb.customize ["modifyvm", :id, "--memory", "2048"]
   end
+
+  config.vm.define "jdemo01" do |jdemo01|
+  end
+  config.vm.hostname = "vagrant-jdemo"
 
   if is_osx
     config.vm.network "public_network", :bridge => $network_interface
@@ -42,29 +47,17 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     config.vm.network "public_network"
   end
 
-  config.vm.network "private_network", ip: "192.168.56.160".
-
-      filesync = %w(~/.gitconfig ~/.vimrc ~/.screenrc)
-  filesync.each do |src|
-    config.vm.provision :file do |file|
-      file.source = src
-      file.destination = src
-    end
-  end
-
-  config.omnibus.chef_version = :latest
-  #   chef.validation_client_name = "ORGNAME-validator"
-  config.vm.provision :chef_client do |chef|
+  config.vm.provision "chef_client" do |chef|
     chef.chef_server_url = "https://api.opscode.com/organizations/#{orgName}"
-    chef.validation_client_name = "#{orgName}-validator"
+    #chef.validation_client_name = "#{orgName}-validator"
     chef.validation_key_path = "#{ENV['HOME']}/.chef/#{orgName}-validator.pem"
     # this creates nat address which is fine for hosted
     # Add a recipe
-    #chef.add_recipe "vim"
-    #chef.add_recipe "java"
-    #chef.add_recipe "jenkins::_master_package"
-    chef.node_name = "ubuntu-chef"
+    chef.add_recipe "jdemo::default"
+    chef.node_name = "ubuntu-chef-jdemo"
     chef.provisioning_path = "/etc/chef"
     chef.log_level = :info
+    chef.delete_node = true
+    chef.delete_client = true
   end
 end
