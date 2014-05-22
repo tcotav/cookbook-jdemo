@@ -1,4 +1,4 @@
-require '../spec_helper'
+require 'spec_helper'
 
 describe package('openjdk-7-jdk') do
   it { should be_installed }
