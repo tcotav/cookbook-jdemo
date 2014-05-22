@@ -26,7 +26,7 @@ end
 desc "Run all tests"
 task :test => [:lint, :spec, :unit]
 task :default => :test
-task :docker => :docker
+task :docker_test => :docker
 
 
 begin
