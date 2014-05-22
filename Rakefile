@@ -18,6 +18,10 @@ RSpec::Core::RakeTask.new(:unit) do |t|
   t.pattern = "test/integration/default/serverspec/*_spec.rb"
 end
 
+desc "Run Docker Server Spec tests"
+RSpec::Core::RakeTask.new(:docker) do |t|
+  t.pattern = "test/integration/default/serverspec/localhost/*_spec.rb"
+end
 
 desc "Run all tests"
 task :test => [:lint, :spec, :unit]
