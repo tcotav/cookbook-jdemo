@@ -1,6 +1,6 @@
 require "foodcritic"
 require "rspec/core/rake_task"
-require "serverspec"
+#require "serverspec"
 
 desc "Run Foodcritic lint checks"
 FoodCritic::Rake::LintTask.new(:lint) do |t|
@@ -18,15 +18,16 @@ RSpec::Core::RakeTask.new(:unit) do |t|
   t.pattern = "test/integration/default/serverspec/*_spec.rb"
 end
 
-desc "Run Docker Server Spec tests"
-RSpec::Core::RakeTask.new(:docker) do |t|
-  t.pattern = "test/integration/default/serverspec/localhost/*_spec.rb"
-end
+
+#desc "Run Docker Server Spec tests"
+#RSpec::Core::RakeTask.new(:docker) do |t|
+#  t.pattern = "test/integration/default/serverspec/localhost/*_spec.rb"
+#end
 
 desc "Run all tests"
-task :test => [:lint, :spec, :unit]
+task :test => [:lint, :spec]
 task :default => :test
-task :docker_test => :docker
+#task :docker_test => :docker
 
 
 begin
