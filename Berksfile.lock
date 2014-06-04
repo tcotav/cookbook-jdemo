@@ -1,0 +1,15 @@
+DEPENDENCIES
+  jdemo
+    path: .
+    metadata: true
+
+GRAPH
+  apt (2.4.0)
+  java (1.22.0)
+  jdemo (0.1.0)
+    apt (>= 0.0.0)
+    tomcat (>= 0.0.0)
+  openssl (1.1.0)
+  tomcat (0.15.12)
+    java (>= 0.0.0)
+    openssl (>= 0.0.0)
